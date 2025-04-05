@@ -983,7 +983,8 @@ public class Draft_6455 extends Draft {
       throws InvalidDataException {
     try {
       webSocketImpl.getWebSocketListener()
-          .onWebsocketMessage(webSocketImpl, Charsetfunctions.stringUtf8(frame.getPayloadData()));
+          //.onWebsocketMessage(webSocketImpl, Charsetfunctions.stringUtf8(frame.getPayloadData()));
+              .onWebsocketMessage(webSocketImpl, frame.getPayloadData());
     } catch (RuntimeException e) {
       logRuntimeException(webSocketImpl, e);
     }
@@ -1009,8 +1010,8 @@ public class Draft_6455 extends Draft {
       ((FramedataImpl1) currentContinuousFrame).setPayload(getPayloadFromByteBufferList());
       ((FramedataImpl1) currentContinuousFrame).isValid();
       try {
-        webSocketImpl.getWebSocketListener().onWebsocketMessage(webSocketImpl,
-            Charsetfunctions.stringUtf8(currentContinuousFrame.getPayloadData()));
+        //webSocketImpl.getWebSocketListener().onWebsocketMessage(webSocketImpl, Charsetfunctions.stringUtf8(currentContinuousFrame.getPayloadData()));
+        webSocketImpl.getWebSocketListener().onWebsocketMessage(webSocketImpl, currentContinuousFrame.getPayloadData());
       } catch (RuntimeException e) {
         logRuntimeException(webSocketImpl, e);
       }
