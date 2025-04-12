@@ -11,6 +11,8 @@ This fork:
 - Removes UTF-8 validation in the TextFrame class
 - Ensures the string-based onMessage method is never used
 - Processes all incoming data as raw binary first
+- Modifies the default WebSocketClient reset() function to be publicly accessible
+- Adds a workaround for error handling to the reset() and run()
 
 License
 -------

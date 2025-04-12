@@ -73,6 +73,8 @@ import org.java_websocket.protocols.IProtocol;
  */
 public abstract class WebSocketClient extends AbstractWebSocket implements Runnable, WebSocket {
 
+  public String connectionErrorMessage = null;
+
   /**
    * The URI this channel is supposed to connect to.
    */
@@ -332,8 +334,9 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
    *
    * @since 1.3.8
    */
-  private void reset() {
+  public void reset() {
     Thread current = Thread.currentThread();
+    connectionErrorMessage = null;
     if (current == writeThread || current == connectReadThread) {
       throw new IllegalStateException(
           "You cannot initialize a reconnect out of the websocket thread. Use reconnect in another thread to ensure a successful cleanup.");
@@ -508,7 +511,11 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 
       sendHandshake();
     } catch (/*IOException | SecurityException | UnresolvedAddressException | InvalidHandshakeException | ClosedByInterruptException | SocketTimeoutException */Exception e) {
-      onWebsocketError(engine, e);
+      // Ignore these exceptions as they are unwanted in the IDE notifications
+      if (!e.getMessage().contains("Host is down") && !e.getMessage().contains("Socket closed") && !e.getMessage().contains("Connection refused")) {
+        onWebsocketError(engine, e);
+      }
+      connectionErrorMessage = e.getMessage();
       engine.closeConnection(CloseFrame.NEVER_CONNECTED, e.getMessage());
       return;
     } catch (InternalError e) {
